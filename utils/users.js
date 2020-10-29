@@ -8,3 +8,9 @@ function userJoin(id, username, room) {
 
     return user;
 }
+
+// Get the current user
+function getCurrentUser(id) {
+    return users.find(user => user.id === id);
+}
+
