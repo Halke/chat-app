@@ -34,7 +34,18 @@ io.on("connection", socket => {
 
         // Broadcast when a user connects. That means the message is
         // sent to everyone on chat except the user that is connecting.
-        socket.broadcast.to(user.room).emit("message", formatMessage(botName, `${user.username} has joined the chat!`));
+        socket.broadcast
+            .to(user.room)
+            .emit(
+                "message", 
+                formatMessage(botName, `${user.username} has joined the chat!`)
+            );
+
+            // Send users and room info
+            io.to(user.room).emit("roomUsers", {
+                room: user.room,
+                users: getRoomUsers(user.room)
+            });
     });
 
     // Sends the message to everyone including the user that is
@@ -52,7 +63,18 @@ io.on("connection", socket => {
         const user = userLeave(socket.id);
 
         if(user){
-            io.to(user.room).emit("message", formatMessage(botName, `${user.username} has left the chat!`));
+            io
+                .to(user.room)
+                .emit(
+                    "message", 
+                    formatMessage(botName, `${user.username} has left the chat!`)
+                );
+            
+            // Send users and room info
+            io.to(user.room).emit("roomUsers", {
+                room: user.room,
+                users: getRoomUsers(user.room)
+            });
         }
 
     });
