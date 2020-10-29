@@ -34,7 +34,7 @@ io.on("connection", socket => {
 
     // Listen for chat message
     socket.on("chatMessage", (message) => {
-        io.emit("message", message);
+        io.emit("message", formatMessage("USER", message));
     })
 });
 
