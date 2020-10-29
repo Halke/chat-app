@@ -22,14 +22,14 @@ io.on("connection", socket => {
 
     // Broadcast when a user connects. That means the message is
     // sent to everyone on chat except the user that is connecting.
-    socket.broadcast.emit("message", "A user has joined the chat!");
+    socket.broadcast.emit("message", formatMessage(botName, "A user has joined the chat!"));
 
     // Sends the message to everyone including the user that is
     // connecting to app.
     // ---- io.emit("message", "")
 
     socket.on("disconnect", () => {
-        io.emit("message", "A user has left the chat!");
+        io.emit("message", formatMessage(botName, "A user has left the chat!"));
     });
 
     // Listen for chat message
