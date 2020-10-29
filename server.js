@@ -19,6 +19,10 @@ const botName = "ChatCord Bot";
 io.on("connection", socket => {
 
     socket.on("joinRoom", ({username, room}) => {
+        const user = userJoin(socket.id, username, room);
+
+        socket.join(user.room);
+
         // Message that is emitted only to the user that
         // connected to app
         socket.emit("message", formatMessage(botName, "Welcome to ChatCord!"));
