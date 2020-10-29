@@ -1,19 +1,42 @@
+const chatForm = document.getElementById("chat-form");
+const chatMessages = document.querySelector(".chat-messages");
+
 const socket = io();
 
+// Message from server
 socket.on("message", message => {
-    // Message that is emitted only to the user that
-    // connected to app
-    socket.emit("message", "Welcome to ChatCord!");
+    console.log(message);
+    outputMessage(message);
 
-    // Broadcast when a user connects. That means the message is
-    // sent to everyone on chat except the user that is connecting.
-    socket.broadcast.emit("message", "A user has joined chat!");
-
-    // Sends the message to everyone including the user that is
-    // connecting to app.
-    // ---- io.emit("message", "")
-
-    socket.on("disconnect", () => {
-        io.emit("message", "A user has left the chat!");
-    });
+    // Scroll down
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 });
+
+// Message submit
+chatForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    // Get message text
+    const message = e.target.elements.msg.value;
+
+    // Emitting a message to the server
+    socket.emit("chatMessage", message);
+
+    // Clear the input
+    e.target.elements.msg.value = "";
+    e.target.elements.msg.focus();
+});
+
+// Output message to DOM
+function outputMessage(message){
+    const div = document.createElement("div");
+    div.classList.add("message");
+    div.innerHTML = `
+        <p class="meta">
+            Brad <span>09:12</span>
+        </p>
+        <p class="text">
+            ${message}
+        </p>`;
+    document.querySelector(".chat-messages").appendChild(div);
+}
